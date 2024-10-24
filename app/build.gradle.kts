@@ -51,6 +51,11 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
 
     // TODO: Tambahkan Library TensorFlow Lite
     implementation("org.tensorflow:tensorflow-lite-task-vision:0.4.4")

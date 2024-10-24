@@ -11,18 +11,19 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.dicoding.asclepius.databinding.ActivityMainBinding
 import com.dicoding.asclepius.helper.ImageClassifierHelper
 import org.tensorflow.lite.task.vision.classifier.Classifications
 import java.text.NumberFormat
 
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var imageViewModel: ImageViewModel
 
-    private var currentImageUri: Uri? = null
     private var results: String = " "
     private var confidenceScore: String = ""
-
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -44,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        imageViewModel = ViewModelProvider(this).get(ImageViewModel::class.java)
+
         if (!allPermissionsGranted()) {
             requestPermissionLauncher.launch(REQUIRED_PERMISSION)
         }
@@ -53,13 +56,16 @@ class MainActivity : AppCompatActivity() {
             analyzeImage()
             moveToResult()
         }
+        imageViewModel.imageUri?.let {
+            binding.previewImageView.setImageURI(it)
+        }
     }
 
     private val launcherGallery = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         if (uri != null) {
-            currentImageUri = uri
+            imageViewModel.imageUri = uri
             showImage()
         } else {
             Log.d("Photo Picker", "No media selected")
@@ -73,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showImage() {
         // TODO: Menampilkan gambar sesuai Gallery yang dipilih.
-        currentImageUri?.let {
+        imageViewModel.imageUri?.let {
             Log.d("Image URI", "showImage: $it")
             binding.previewImageView.setImageURI(it)
         }
@@ -81,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun analyzeImage() {
         // TODO: Menganalisa gambar yang berhasil ditampilkan.
-        currentImageUri?.let { uri ->
+        imageViewModel.imageUri?.let { uri ->
             val classifierHelper = ImageClassifierHelper(
                 context = this,
                 classifierListener = object : ImageClassifierHelper.ClassifierListener {
@@ -91,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     override fun onResults(results: List<Classifications>?, inferenceTime: Long) {
                         if (results != null && results.isNotEmpty()) {
-                            val topResult = results[0].categories[0] // // get the top classification result
+                            val topResult = results[0].categories[0] // get the top classification result
                             this@MainActivity.results = topResult.label // store label in the instance variable
                             confidenceScore = NumberFormat.getPercentInstance().format(topResult.score) // format confidence score
                             showToast("Analysis complete: ${topResult.label} with confidence $confidenceScore")
@@ -109,7 +115,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun moveToResult() {
         val intent = Intent(this, ResultActivity::class.java).apply {
-            putExtra(ResultActivity.EXTRA_IMAGE_URI, currentImageUri.toString())
+            putExtra(ResultActivity.EXTRA_IMAGE_URI, imageViewModel.imageUri.toString())
             putExtra(ResultActivity.EXTRA_RESULT, results)
             putExtra(ResultActivity.EXTRA_SCORE, confidenceScore)
         }
