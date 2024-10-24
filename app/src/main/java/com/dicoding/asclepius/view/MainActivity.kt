@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
     private fun analyzeImage() {
         // TODO: Menganalisa gambar yang berhasil ditampilkan.
         currentImageUri?.let { uri ->
-            val classifierHelper = ImageClassifierHelper( // instance of ImageClassifierHelper
+            val classifierHelper = ImageClassifierHelper(
                 context = this,
                 classifierListener = object : ImageClassifierHelper.ClassifierListener {
                     override fun onError(error: String) {
@@ -101,7 +101,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             )
-            // classify the image using the selected URI
             classifierHelper.classifyStaticImage(uri)
         } ?: run {
             showToast("Please select an image first.")
@@ -111,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     private fun moveToResult() {
         val intent = Intent(this, ResultActivity::class.java).apply {
             putExtra(ResultActivity.EXTRA_IMAGE_URI, currentImageUri.toString())
-            putExtra(ResultActivity.EXTRA_RESULT, results.lines().firstOrNull())
+            putExtra(ResultActivity.EXTRA_RESULT, results)
             putExtra(ResultActivity.EXTRA_SCORE, confidenceScore)
         }
         startActivity(intent)

@@ -3,6 +3,7 @@ package com.dicoding.asclepius.view
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.dicoding.asclepius.R
 import com.dicoding.asclepius.databinding.ActivityResultBinding
 
 class ResultActivity : AppCompatActivity() {
@@ -13,7 +14,11 @@ class ResultActivity : AppCompatActivity() {
         binding = ActivityResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // TODO: Menampilkan hasil gambar, prediksi, dan confidence score.
+//         TODO: Menampilkan hasil gambar, prediksi, dan confidence score.
+        displayResults()
+    }
+
+    private fun displayResults() {
         val imageUri = Uri.parse(intent.getStringExtra(EXTRA_IMAGE_URI))
         val detectResult = intent.getStringExtra(EXTRA_RESULT)
         val detectedScore = intent.getStringExtra(EXTRA_SCORE)

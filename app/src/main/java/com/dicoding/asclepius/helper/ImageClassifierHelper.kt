@@ -19,6 +19,7 @@ import org.tensorflow.lite.task.vision.classifier.Classifications
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier
 
 
+@Suppress("DEPRECATION")
 class ImageClassifierHelper(
     private val threshold: Float = 0.1f,
     private val maxResults: Int = 3,
