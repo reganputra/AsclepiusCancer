@@ -4,5 +4,7 @@
     <string name="camera">Kamera</string>
     <string name="gallery">Galeri</string>
     <string name="analyze">Analyze</string>
-    <string name="result">Hasil Analisis</string>
+    <string name="result">Result will appear here:</string>
+    <string name="confident_score">Confidence Score</string>
+    <string name="image_classifier_failed">Failed to Classified</string>
 </resources>
